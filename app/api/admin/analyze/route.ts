@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { cosineSimilarity } from "@/lib/ml";
 
 const REAL_AI_KEY = "sk-aitunnel-HpBrut7c9ESyGJLgOcGYbi8TKCKcdp4w";
-const apiKey = process.env.AITUNNEL_API_KEY || REAL_AI_KEY;
+const apiKey: any = process.env.AITUNNEL_API_KEY || REAL_AI_KEY;
 
-async function getEmbedding(text: string) {
+async function getEmbedding(text: any): Promise<any> {
   try {
-    const res = await fetch("https://api.aitunnel.ru/v1/embeddings", {
+    const res: any = await fetch("https://api.aitunnel.ru/v1/embeddings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,30 +16,32 @@ async function getEmbedding(text: string) {
       },
       body: JSON.stringify({ model: "text-embedding-3-small", input: text }),
     });
-    const data = await res.json();
+    const data: any = await res.json();
     return data.data[0].embedding;
-  } catch (e) {
+  } catch (e: any) {
     return null;
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: any): Promise<any> {
   try {
-    const { reportId } = await req.json();
-    const targetReport = await prisma.report.findUnique({
+    const { reportId }: any = await req.json();
+    const targetReport: any = await prisma.report.findUnique({
       where: { id: Number(reportId) },
-    });
+    } as any);
+
     if (!targetReport)
       return NextResponse.json({ error: "Report not found" }, { status: 404 });
 
-    const allReports = await prisma.report.findMany({
+    const allReports: any = await prisma.report.findMany({
       where: { id: { not: Number(reportId) } },
-    });
+    } as any);
 
-    const targetEmbedding = await getEmbedding(targetReport.anonymizedText);
+    const targetEmbedding: any = await getEmbedding(
+      targetReport.anonymizedText,
+    );
 
     if (!targetEmbedding) {
-      // Автономный фолбек для демонстрации
       return NextResponse.json({
         matches: [
           {
@@ -51,9 +53,9 @@ export async function POST(req: Request) {
       });
     }
 
-    const similarities = await Promise.all(
-      allReports.map(async (rep: any) => {
-        const repEmbedding = await getEmbedding(rep.anonymizedText);
+    const similarities: any = await Promise.all(
+      allReports.map(async (rep: any): Promise<any> => {
+        const repEmbedding: any = await getEmbedding(rep.anonymizedText);
         if (!repEmbedding)
           return {
             trackingId: rep.trackingId,
@@ -61,7 +63,10 @@ export async function POST(req: Request) {
             department: rep.department,
           };
 
-        const similarityScore = cosineSimilarity(targetEmbedding, repEmbedding);
+        const similarityScore: any = cosineSimilarity(
+          targetEmbedding,
+          repEmbedding,
+        );
         return {
           trackingId: rep.trackingId,
           score: similarityScore,
@@ -70,12 +75,12 @@ export async function POST(req: Request) {
       }),
     );
 
-    const matches = similarities
-      .filter((s:any) => s.score > 0.6)
-      .sort((a:any, b:any) => b.score - a.score);
+    const matches: any = similarities
+      .filter((s: any) => s.score > 0.6)
+      .sort((a: any, b: any) => b.score - a.score);
 
     return NextResponse.json({ matches });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: "Ошибка анализа" }, { status: 500 });
   }
 }

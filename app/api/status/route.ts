@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(report);
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }

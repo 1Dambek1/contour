@@ -24,7 +24,7 @@ export async function GET() {
     });
 
     return NextResponse.json(reports);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Ошибка БД:", error);
     return NextResponse.json({ error: "Ошибка БД" }, { status: 500 });
   }

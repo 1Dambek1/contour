@@ -28,7 +28,7 @@ export async function GET() {
     return NextResponse.json({
       message: "Администратор успешно создан! Логин: ombudsman",
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return NextResponse.json(
       { error: "Ошибка создания админа" },

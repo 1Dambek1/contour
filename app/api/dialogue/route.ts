@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(newMessage);
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
       { error: "Не удалось отправить сообщение" },
       { status: 500 },

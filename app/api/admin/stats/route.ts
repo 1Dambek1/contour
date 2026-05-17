@@ -59,7 +59,7 @@ export async function GET() {
       "Юридический факультет",
       "Административный отдел",
     ];
-    const heatmapData = depts.map((dept) => ({
+    const heatmapData = depts.map((dept:any) => ({
       department: dept,
       corruption: reports.filter(
         (r: any) => r.department === dept && r.category === "corruption",

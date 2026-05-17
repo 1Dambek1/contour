@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     // Готовим список для ИИ
-    const reportsListSummary = otherReports.map((r) => ({
+    const reportsListSummary = otherReports.map((r: any) => ({
       id: r.id,
       trackingId: r.trackingId,
       text: r.anonymizedText,
