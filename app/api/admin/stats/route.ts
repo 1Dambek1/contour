@@ -14,7 +14,7 @@ export async function GET() {
 
     // 1. Агрегация по статусам
     const statusMap: any = {};
-    reports.forEach((r) => {
+    reports.forEach((r: any) => {
       statusMap[r.status] = (statusMap[r.status] || 0) + 1;
     });
 
