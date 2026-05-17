@@ -71,8 +71,8 @@ export async function POST(req: Request) {
     );
 
     const matches = similarities
-      .filter((s) => s.score > 0.6)
-      .sort((a, b) => b.score - a.score);
+      .filter((s:any) => s.score > 0.6)
+      .sort((a:any, b:any) => b.score - a.score);
 
     return NextResponse.json({ matches });
   } catch (error) {

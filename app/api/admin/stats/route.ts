@@ -26,25 +26,25 @@ export async function GET() {
       harassment: 0,
       other: 0,
     };
-    reports.forEach((r) => {
+    reports.forEach((r:any) => {
       categoryMap[r.category] = (categoryMap[r.category] || 0) + 1;
     });
 
     // 3. Агрегация по режимам (Анонимно, конфиденциально, открыто)
     const modeMap: any = { anonymous: 0, confidential: 0, open: 0 };
-    reports.forEach((r) => {
+    reports.forEach((r: any) => {
       modeMap[r.mode] = (modeMap[r.mode] || 0) + 1;
     });
 
     // 4. Агрегация по уровням риска (Low, Medium, High)
     const riskMap: any = { low: 0, medium: 0, high: 0 };
-    reports.forEach((r) => {
+    reports.forEach((r: any) => {
       riskMap[r.riskLevel] = (riskMap[r.riskLevel] || 0) + 1;
     });
 
     // 5. Временной тренд по дням
     const timeTrendMap: any = {};
-    reports.forEach((r) => {
+    reports.forEach((r: any) => {
       const day = new Date(r.createdAt).toLocaleDateString("ru-RU", {
         day: "numeric",
         month: "short",
@@ -62,16 +62,16 @@ export async function GET() {
     const heatmapData = depts.map((dept) => ({
       department: dept,
       corruption: reports.filter(
-        (r) => r.department === dept && r.category === "corruption",
+        (r: any) => r.department === dept && r.category === "corruption",
       ).length,
       ethics: reports.filter(
-        (r) => r.department === dept && r.category === "ethics",
+        (r: any) => r.department === dept && r.category === "ethics",
       ).length,
       conflict: reports.filter(
-        (r) => r.department === dept && r.category === "conflict",
+        (r: any) => r.department === dept && r.category === "conflict",
       ).length,
       harassment: reports.filter(
-        (r) => r.department === dept && r.category === "harassment",
+        (r: any) => r.department === dept && r.category === "harassment",
       ).length,
     }));
 
