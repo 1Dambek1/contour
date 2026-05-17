@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     const similarities = await Promise.all(
-      allReports.map(async (rep) => {
+      allReports.map(async (rep: any) => {
         const repEmbedding = await getEmbedding(rep.anonymizedText);
         if (!repEmbedding)
           return {
