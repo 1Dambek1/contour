@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Report {
+  id             Int       @id @default(autoincrement())
+  trackingId     String    @unique @map("tracking_id")
+  accessKey      String    @map("access_key")
+  mode           String
+  category       String    @default("other")
+  department     String    @default("unknown")
+  originalText   String    @map("original_text")
+  anonymizedText String    @map("anonymized_text")
+  evidenceFiles  String?   @map("evidence_files") // JSON-строка со списком файлов
+  status         String    @default("Ожидает проверки")
+  riskLevel      String    @default("low") @map("risk_level")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  messages       Message[] // Связь для анонимного чата
+
+  @@map("reports")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  reportId  Int      @map("report_id")
+  sender    String   // 'applicant' (заявитель) или 'ombudsman' (комиссия)
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  report    Report   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  role     String @default("ombudsman")
+
+  @@map("users")
+}
